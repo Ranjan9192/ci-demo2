@@ -1,0 +1,13 @@
+node {   def mvnHome   def javaHome   stage('Preparation') { // for 
+display purposes      // Get some code from a GitHub repository     // 
+git 'https://github.com/Ranjan9192/ci-demo2.git'       git(url : 
+'https://github.com/Ranjan9192/ci-demo2.git',credentialId: 'git-id')      // 
+Get the Maven tool.      // ** NOTE: This 'M3' Maven tool must be 
+configured      // **       in the global configuration.                 
+mvnHome = tool 'M3'      javaHome= tool 'JDK'   }   stage('Build') 
+{         bat(/set JAVA_HOME="${javaHome}"/)        // 
+bat(/"${mvnHome}\bin\mvn"  clean package/)    
+//*-Dmaven.test.failure.ignore*/         bat(/"${mvnHome}\bin\mvn" -f 
+pom.xml  clean package/)         }   stage('Results') {      
+junit '**/target/surefire-reports/TEST-*.xml'      archive 
+'target/*.jar'   }}
